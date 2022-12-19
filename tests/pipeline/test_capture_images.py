@@ -1,14 +1,22 @@
-import numpy as np
-
-from pipeline.capture_images import CaptureImages
-import tests.config as config
+from pathlib import Path
 
 
-class TestCaptureImages:
-    def test_capture_images(self):
-        capture_images = CaptureImages(config.ASSETS_IMAGES_DIR)
+import pytest
 
-        images = list(capture_images)
+from pipeline.processed_data import ImagePipelineData
+from pipeline.readers.opencv_read_image import ReadOpenCVImage
+from pipeline.utils.pipeline_data import get_data
+from tests.pipeline import CONFIG
 
-        assert len(images) == 6
-        assert isinstance(images[0]["image"], np.ndarray)
+
+@pytest.mark.parametrize('img_name', CONFIG.IMAGES)
+def test_capture_images(datadir, img_name):
+    node = ReadOpenCVImage()
+    im_path = Path(datadir) / CONFIG.IM_FOLDER / img_name
+
+    data = get_data(im_path)
+    result: ImagePipelineData = node(data)
+    assert result.processed_image is not None
+    assert result.input_image is not None
+    assert result.processed_image.shape == result.input_image.shape
+    print('Result shape', result.processed_image.shape)

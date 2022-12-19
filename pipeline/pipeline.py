@@ -1,44 +1,19 @@
-class Pipeline(object):
+from abc import ABC, abstractmethod
+
+from pipeline.processed_data import ImagePipelineData
+
+
+class Pipeline(ABC):
     """Common pipeline class fo all pipeline tasks."""
 
-    def __init__(self, source=None):
-        self.source = source
+    @abstractmethod
+    def process(self, data: ImagePipelineData) -> ImagePipelineData:
+        pass
 
-    def __iter__(self):
-        return self.generator()
-
-    def generator(self):
-        """Yields the pipeline data."""
-
-        while self.has_next():
-            try:
-                data = next(self.source) if self.source else {}
-                if self.filter(data):
-                    yield self.map(data)
-            except StopIteration:
-                return
-
-    def __or__(self, other):
-        """Allows to connect the pipeline task using | operator."""
-
-        if other is not None:
-            other.source = self.generator()
-            return other
-        else:
-            return self
-
-    def filter(self, data):
-        """Overwrite to filter out the pipeline data."""
+    def filter(self, data: ImagePipelineData) -> bool:
+        """It might be better to fast skip process"""
 
         return True
 
-    def map(self, data):
-        """Overwrite to map the pipeline data."""
-
-        return data
-
-    def has_next(self):
-        """Overwrite to stop the generator in certain conditions."""
-
-        return True
-
+    def __call__(self, data: ImagePipelineData) -> ImagePipelineData:
+        return self.process(data)

@@ -1,0 +1,13 @@
+numpy==1.17.2
+tqdm=4.19.9
+
+omegaconf
+opencv-python==4.5.5.64
+opencv-contrib-python==4.5.5.64
+
+# -------- infer ------------- #
+mediapipe
+onnxruntime
+
+# -------- test -------------- #
+pytest==5.1.1
