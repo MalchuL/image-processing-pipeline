@@ -14,6 +14,7 @@ from pipeline.processed_data import ImagePipelineData
 from pipeline.readers.opencv_read_image import ReadOpenCVImage
 from pipeline.stylization.bbox_gan_stylization import BBoxGANStylization
 from pipeline.stylization.image_gan_stylization import ImageGANStylization
+from pipeline.stylization.inference_engine.inference_engine_cache import get_onnx_inference
 from pipeline.stylization.inference_engine.onnx_image_infer import ONNXImageInference
 from pipeline.utils.pipeline_data import get_data
 from tests.pipeline import CONFIG
@@ -30,14 +31,20 @@ def test_merging_pipeline(datadir, img_name, tmpdir):
     detector = StatMediaPipeDetector(TARGET_SHAPE)
     cropping_node = FaceCropping(detector)
     model_path = Path(datadir) / CONFIG.ONNX_MODEL_PATH
-    inference_engine = ONNXImageInference(model_path)
-    image_stylization_node = ImageGANStylization(inference_engine)
-    crops_stylization_node = BBoxGANStylization(inference_engine)
+    inference_engine1 = get_onnx_inference(model_path)
+    image_stylization_node = ImageGANStylization(inference_engine1)
+    inference_engine2 = get_onnx_inference(model_path)
+    crops_stylization_node = BBoxGANStylization(inference_engine2)
+    assert inference_engine1 is inference_engine2
     merging_node = SeamlessMergingCrops(TARGET_SHAPE, debug=True)
     compose_node = Compose([read_node, resizer_node, cropping_node, image_stylization_node, crops_stylization_node, merging_node])
 
     data = get_data(im_path)
     result: ImagePipelineData = compose_node(data)
+    if img_name in CONFIG.IMAGES_NO_FACES:
+        assert not merging_node.filter(data)
+    else:
+        assert merging_node.filter(data)
     tmpdir = str(tmpdir)
     result_image = result.processed_image
     print(result_image.shape)
@@ -64,6 +71,7 @@ def test_no_detection_merging_pipeline(datadir, img_name, tmpdir):
 
     data = get_data(im_path)
     result: ImagePipelineData = compose_node(data)
+    assert not merging_node.filter(data)
     tmpdir = str(tmpdir)
     result_image = result.processed_image
     print(result_image.shape)

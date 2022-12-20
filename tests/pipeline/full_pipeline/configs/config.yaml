@@ -1,0 +1,19 @@
+_target_: pipeline.compose.Compose
+nodes:
+  - _target_: pipeline.readers.opencv_read_image.ReadOpenCVImage
+  - _target_: pipeline.preprocess.resize2division.Resize2Dividable
+    must_divided: &must_divided 32
+  - _target_: pipeline.detectors.face_cropping.FaceCropping
+    detector:
+      _target_: pipeline.detectors.lib.mediapipe_detector.StatMediaPipeDetector
+      target_size: &target_shape 256
+      must_divide: *must_divided
+  - _target_: pipeline.stylization.image_gan_stylization.ImageGANStylization
+    inference_engine: &inference_engine
+      _target_: pipeline.stylization.inference_engine.inference_engine_cache.get_onnx_inference
+      model_path: /home/malchul/work/utilites/image_processing/image-processing-pipeline/tests/pipeline/models/198_jjba_8_k_2_099_ep.onnx
+  - _target_: pipeline.stylization.bbox_gan_stylization.BBoxGANStylization
+    inference_engine: *inference_engine
+  - _target_: pipeline.postprocess.merging_crops.seamless_merging_crops.SeamlessMergingCrops
+    crops_size: *target_shape
+    debug: True

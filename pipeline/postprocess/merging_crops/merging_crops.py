@@ -49,6 +49,6 @@ class MergingCrops(Pipeline):
         return dist_from_center
 
     def filter(self, data: ImagePipelineData) -> bool:
-        if data.processed_detection_bboxes is None or len(data.processed_detection_bboxes):
+        if data.processed_detection_bboxes is None or len(data.processed_detection_bboxes) == 0:
             return False
         return True
