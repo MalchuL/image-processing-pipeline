@@ -5,7 +5,7 @@ images
 
 ## Setup environment
 
-This project is using [Conda](https://conda.io) for project environment management.
+This project is using virtualenv for project environment management.
 
 Setup the project environment:
 
