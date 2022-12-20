@@ -20,3 +20,8 @@ class BBoxGANStylization(GANStylization):
                       zip(data.processed_detection_bboxes, out_data)]
         data.processed_detection_bboxes = out_bboxes
         return data
+
+    def filter(self, data: ImagePipelineData) -> bool:
+        if data.processed_detection_bboxes is None or len(data.processed_detection_bboxes) == 0:
+            return False
+        return True

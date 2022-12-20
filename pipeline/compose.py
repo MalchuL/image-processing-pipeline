@@ -17,5 +17,6 @@ class Compose(Pipeline):
     def process(self, data: ImagePipelineData):
         out_data = data
         for node in self.nodes:
-            out_data = node(out_data)
+            if node.filter(out_data):
+                out_data = node(out_data)
         return out_data

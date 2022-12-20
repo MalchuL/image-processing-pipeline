@@ -55,8 +55,8 @@ def test_crops_detection(datadir, img_name, tmpdir, compose_node):
         print(det_boxes.bbox)
         assert det_boxes.bbox[0] >= 0
         assert det_boxes.bbox[1] >= 0
-        assert det_boxes.bbox[2] < w
-        assert det_boxes.bbox[3] < h
+        assert det_boxes.bbox[2] <= w
+        assert det_boxes.bbox[3] <= h
         assert det_boxes.bbox[0] < det_boxes.bbox[2]
         assert det_boxes.bbox[1] < det_boxes.bbox[3]
 
