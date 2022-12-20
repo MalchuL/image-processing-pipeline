@@ -10,6 +10,9 @@ from pipeline.stylization.inference_engine.infer import InferenceEngine
 class GANStylization(Pipeline, ABC):
     """Pipeline task for crops stylization"""
 
+    def __init__(self, inference_engine: InferenceEngine):
+        self.inference_engine = inference_engine
+
     @abstractmethod
     def _get_target(self, data: ImagePipelineData) -> np.ndarray:
         pass

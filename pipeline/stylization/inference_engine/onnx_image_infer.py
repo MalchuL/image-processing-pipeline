@@ -28,7 +28,7 @@ class ONNXImageInference(InferenceEngine):
         is_batch = True
         if len(img.shape) == 3:
             img = np.expand_dims(img, 0)
-            is_batch = True
+            is_batch = False
         img = self._normalize(img)
         img = img.transpose(0, 3, 1, 2)
         out_image = self.model(img)

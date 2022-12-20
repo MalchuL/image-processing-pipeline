@@ -10,6 +10,7 @@ class Resize2Dividable(Pipeline):
     """Pipeline task to crop image which shape must divide by input value (Usefull for Neural Networks which cannot works with random shape)"""
 
     def __init__(self, must_divided=32):
+        assert must_divided % 2 == 0
         self._must_divided = must_divided
 
     @staticmethod
