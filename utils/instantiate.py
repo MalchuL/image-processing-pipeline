@@ -359,6 +359,7 @@ def _convert_node(node: Any, convert: Union[_ConvertMode, str]) -> Any:
             node = OmegaConf.to_container(
                 node, resolve=True, structured_config_mode=SCMode.DICT_CONFIG
             )
+    return node
 
 
 def _resolve_target(
