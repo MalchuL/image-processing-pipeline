@@ -3,11 +3,7 @@ from setuptools import setup
 setup(
     name='image_processing_pipeline',
     version='',
-    packages=['utils', 'pipeline',
-              'pipeline.utils', 'pipeline.readers', 'pipeline.detectors', 'pipeline.detectors.lib',
-              'pipeline.preprocess', 'pipeline.postprocess', 'pipeline.postprocess.merging_crops',
-              'pipeline.stylization', 'pipeline.stylization.inference_engine',
-              'pipeline.stylization.inference_engine.models'],
+    packages=['utils', 'pipeline'],
     include_package_data=True,
     url='',
     license='',
