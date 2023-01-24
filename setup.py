@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='image_processing_pipeline',
     version='',
-    packages=['image_pipeline'],
+    packages=find_packages(exclude=['image_pipeline']),
     include_package_data=True,
     url='',
     license='',
