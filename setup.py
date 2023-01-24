@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='image_processing_pipeline',
     version='',
-    packages=['utils', 'pipeline'],
+    packages=['image_pipeline'],
     include_package_data=True,
     url='',
     license='',
