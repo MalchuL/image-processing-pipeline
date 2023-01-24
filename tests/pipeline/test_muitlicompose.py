@@ -1,9 +1,7 @@
 from pathlib import Path
 
-import numpy as np
 import pytest
 
-from errors import PipelineConfigurationError
 from image_pipeline.compose import Compose
 from image_pipeline.detectors.face_cropping import FaceCropping
 from image_pipeline.detectors.lib.mediapipe_detector import StatMediaPipeDetector

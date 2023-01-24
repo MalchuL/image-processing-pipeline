@@ -1,7 +1,6 @@
-import cv2
 import numpy as np
 
-from errors import PipelineConfigurationError
+from image_pipeline.utils.errors import PipelineConfigurationError
 from image_pipeline.pipeline import Pipeline
 from image_pipeline.processed_data import ImagePipelineData
 
