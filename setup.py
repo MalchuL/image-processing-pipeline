@@ -8,6 +8,7 @@ setup(
               'pipeline.preprocess', 'pipeline.postprocess', 'pipeline.postprocess.merging_crops',
               'pipeline.stylization', 'pipeline.stylization.inference_engine',
               'pipeline.stylization.inference_engine.models'],
+    include_package_data=True,
     url='',
     license='',
     author='malchul',
