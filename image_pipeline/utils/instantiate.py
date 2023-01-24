@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Sequence, Tuple, Union
 from omegaconf import OmegaConf, SCMode
 from omegaconf._utils import is_structured_config
 
-from .errors import InstantiationException
+from image_pipeline.utils.errors import InstantiationException
 
 
 class _ConvertMode(Enum):

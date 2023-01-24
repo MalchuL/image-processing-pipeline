@@ -1,2 +1,2 @@
-_target_: 'pipeline.preprocess.resize2division.Resize2Dividable'
+_target_: 'image_pipeline.preprocess.resize2division.Resize2Dividable'
 must_divided: 64
