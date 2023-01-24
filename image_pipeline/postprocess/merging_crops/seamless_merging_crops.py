@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from pipeline.postprocess.merging_crops.merging_crops import MergingCrops
+from image_pipeline.postprocess.merging_crops.merging_crops import MergingCrops
 
 
 class SeamlessMergingCrops(MergingCrops):

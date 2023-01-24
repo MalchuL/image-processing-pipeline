@@ -1,6 +1,6 @@
 from functools import lru_cache as cache
 
-from pipeline.stylization.inference_engine.onnx_image_infer import ONNXImageInference
+from image_pipeline.stylization.inference_engine.onnx_image_infer import ONNXImageInference
 
 
 @cache

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from pipeline.processed_data import ImagePipelineData
+from image_pipeline.processed_data import ImagePipelineData
 
 
 class Pipeline(ABC):

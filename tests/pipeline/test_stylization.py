@@ -5,16 +5,16 @@ import cv2
 import numpy as np
 import pytest
 
-from pipeline.compose import Compose
-from pipeline.detectors.face_cropping import FaceCropping
-from pipeline.detectors.lib.mediapipe_detector import StatMediaPipeDetector
-from pipeline.preprocess.resize2division import Resize2Dividable
-from pipeline.processed_data import ImagePipelineData
-from pipeline.readers.opencv_read_image import ReadOpenCVImage
-from pipeline.stylization.bbox_gan_stylization import BBoxGANStylization
-from pipeline.stylization.image_gan_stylization import ImageGANStylization
-from pipeline.stylization.inference_engine.onnx_image_infer import ONNXImageInference
-from pipeline.utils.pipeline_data import get_data
+from image_pipeline.compose import Compose
+from image_pipeline.detectors.face_cropping import FaceCropping
+from image_pipeline.detectors.lib.mediapipe_detector import StatMediaPipeDetector
+from image_pipeline.preprocess.resize2division import Resize2Dividable
+from image_pipeline.processed_data import ImagePipelineData
+from image_pipeline.readers.opencv_read_image import ReadOpenCVImage
+from image_pipeline.stylization.bbox_gan_stylization import BBoxGANStylization
+from image_pipeline.stylization.image_gan_stylization import ImageGANStylization
+from image_pipeline.stylization.inference_engine.onnx_image_infer import ONNXImageInference
+from image_pipeline.utils.pipeline_data import get_data
 from tests.pipeline import CONFIG
 
 MUST_DIVIDED = 32

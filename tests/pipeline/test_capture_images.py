@@ -3,9 +3,9 @@ from pathlib import Path
 
 import pytest
 
-from pipeline.processed_data import ImagePipelineData
-from pipeline.readers.opencv_read_image import ReadOpenCVImage
-from pipeline.utils.pipeline_data import get_data
+from image_pipeline.processed_data import ImagePipelineData
+from image_pipeline.readers.opencv_read_image import ReadOpenCVImage
+from image_pipeline.utils.pipeline_data import get_data
 from tests.pipeline import CONFIG
 
 

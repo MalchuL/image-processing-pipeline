@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-from pipeline.processed_data import ImagePipelineData, DetectionResult
+from image_pipeline.processed_data import ImagePipelineData, DetectionResult
 
 
 def test_data():

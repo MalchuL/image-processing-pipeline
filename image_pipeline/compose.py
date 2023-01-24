@@ -3,8 +3,8 @@ from typing import List, Union
 
 import numpy as np
 
-from pipeline.pipeline import Pipeline
-from pipeline.processed_data import ImagePipelineData
+from image_pipeline.pipeline import Pipeline
+from image_pipeline.processed_data import ImagePipelineData
 
 
 # img: Union[str, np.ndarray, List[str, np.ndarray]]

@@ -1,7 +1,7 @@
 import cv2
 
-from pipeline.pipeline import Pipeline
-from pipeline.processed_data import ImagePipelineData
+from image_pipeline.pipeline import Pipeline
+from image_pipeline.processed_data import ImagePipelineData
 
 
 class ReadOpenCVImage(Pipeline):

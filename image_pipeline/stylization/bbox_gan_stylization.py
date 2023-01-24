@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 import cv2
 import numpy as np
 
-from pipeline.processed_data import ImagePipelineData, DetectionResult
-from pipeline.stylization.gan_stylization import GANStylization
-from pipeline.stylization.inference_engine.infer import InferenceEngine
+from image_pipeline.processed_data import ImagePipelineData, DetectionResult
+from image_pipeline.stylization.gan_stylization import GANStylization
+from image_pipeline.stylization.inference_engine.infer import InferenceEngine
 
 
 class BBoxGANStylization(GANStylization):

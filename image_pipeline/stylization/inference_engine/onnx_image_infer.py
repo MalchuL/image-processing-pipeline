@@ -2,8 +2,8 @@ from typing import Union
 
 import numpy as np
 
-from pipeline.stylization.inference_engine.infer import InferenceEngine
-from pipeline.stylization.inference_engine.models.onnx_model import ONNXModel
+from image_pipeline.stylization.inference_engine.infer import InferenceEngine
+from image_pipeline.stylization.inference_engine.models.onnx_model import ONNXModel
 
 
 class ONNXImageInference(InferenceEngine):

@@ -1,17 +1,15 @@
-import logging
 import os
 from pathlib import Path
 
 import cv2
-import numpy as np
 import pytest
 from omegaconf import OmegaConf
 
-from pipeline.pipeline import Pipeline
-from pipeline.processed_data import ImagePipelineData
-from pipeline.utils.pipeline_data import get_data
+from image_pipeline.pipeline import Pipeline
+from image_pipeline.processed_data import ImagePipelineData
+from image_pipeline.utils.pipeline_data import get_data
 from tests.pipeline import CONFIG
-from utils.instantiate import instantiate
+from image_pipeline.utils.instantiate import instantiate
 
 
 @pytest.mark.skip('TODO add normal path to model')

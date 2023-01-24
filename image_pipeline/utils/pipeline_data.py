@@ -3,7 +3,7 @@ from typing import Union
 
 import numpy as np
 
-from pipeline.processed_data import ImagePipelineData
+from image_pipeline.processed_data import ImagePipelineData
 
 
 def get_data(img_or_path: Union[str, Path, np.ndarray]) -> ImagePipelineData:

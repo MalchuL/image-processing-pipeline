@@ -3,8 +3,8 @@ from abc import abstractmethod
 import cv2
 import numpy as np
 
-from pipeline.pipeline import Pipeline
-from pipeline.processed_data import ImagePipelineData
+from image_pipeline.pipeline import Pipeline
+from image_pipeline.processed_data import ImagePipelineData
 
 
 class MergingCrops(Pipeline):

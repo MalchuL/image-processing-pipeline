@@ -1,8 +1,6 @@
 from pathlib import Path
 
-import pytest
-
-from utils.instantiate import instantiate
+from image_pipeline.utils.instantiate import instantiate
 from omegaconf import OmegaConf
 
 CONFIGS_FOLDER = 'configs'

@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from pipeline.pipeline import Pipeline
-from pipeline.processed_data import ImagePipelineData
-from pipeline.stylization.inference_engine.infer import InferenceEngine
+from image_pipeline.pipeline import Pipeline
+from image_pipeline.processed_data import ImagePipelineData
+from image_pipeline.stylization.inference_engine.infer import InferenceEngine
 
 
 class GANStylization(Pipeline, ABC):

@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 
-from pipeline.detectors.lib.face_detector import FaceDetector
-from pipeline.pipeline import Pipeline
-from pipeline.processed_data import ImagePipelineData, DetectionResult
+from image_pipeline.detectors.lib.face_detector import FaceDetector
+from image_pipeline.pipeline import Pipeline
+from image_pipeline.processed_data import ImagePipelineData, DetectionResult
 
 
 class FaceCropping(Pipeline):

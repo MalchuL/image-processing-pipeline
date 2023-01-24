@@ -4,11 +4,11 @@ import numpy as np
 import pytest
 
 from errors import PipelineConfigurationError
-from pipeline.compose import Compose
-from pipeline.preprocess.resize2division import Resize2Dividable
-from pipeline.processed_data import ImagePipelineData
-from pipeline.readers.opencv_read_image import ReadOpenCVImage
-from pipeline.utils.pipeline_data import get_data
+from image_pipeline.compose import Compose
+from image_pipeline.preprocess.resize2division import Resize2Dividable
+from image_pipeline.processed_data import ImagePipelineData
+from image_pipeline.readers.opencv_read_image import ReadOpenCVImage
+from image_pipeline.utils.pipeline_data import get_data
 from tests.pipeline import CONFIG
 
 RAISES_DIVIDED = 10_000
