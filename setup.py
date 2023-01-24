@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='image_processing_pipeline',
     version='',
-    packages=find_packages(exclude=['image_pipeline'], include=['compose', 'pipeline', 'processed_data']),
+    packages=[*find_packages(exclude=['image_pipeline']), 'compose', 'pipeline', 'processed_data'],
     include_package_data=True,
     url='',
     license='',
