@@ -9,14 +9,14 @@ from image_pipeline.stylization.inference_engine.models.onnx_model import ONNXMo
 class ONNXImageInference(InferenceEngine):
     MAX_IMG_VALUE = 255
 
-    def __init__(self, model_path, mean: Union[float, np.ndarray] = 0.5, std: Union[float, np.ndarray] = 0.5):
+    def __init__(self, model_path, mean: Union[float, np.ndarray] = 0.5, std: Union[float, np.ndarray] = 0.5, onnx_providers=None):
         if isinstance(mean, np.ndarray) and len(mean) == 3:
             mean = np.expand_dims(mean, 0)
         if isinstance(std, np.ndarray) and len(std) == 3:
             std = np.expand_dims(std, 0)
         self.mean = mean
         self.std = std
-        self.model = ONNXModel(model_path)
+        self.model = ONNXModel(model_path, providers=onnx_providers)
 
     def _normalize(self, img):
         return (img / self.MAX_IMG_VALUE - self.mean) / self.std
