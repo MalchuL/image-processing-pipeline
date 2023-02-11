@@ -1,5 +1,3 @@
-import math
-
 import cv2
 import numpy as np
 
@@ -31,7 +29,7 @@ class RestrictImageArea(Pipeline):
                 f'Result shapes is 0 along dimension.')
         area = h * w
         if area > self.max_area:
-            scale = math.sqrt(area / self.max_area)
+            scale = area / self.max_area
             new_h = round(h / scale)
             new_w = round(w / scale)
 
