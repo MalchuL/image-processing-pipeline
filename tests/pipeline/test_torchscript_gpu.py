@@ -56,32 +56,3 @@ def test_torchscript_pipeline(datadir, img_name, tmpdir, use_gpu):
     assert c == 3
 
     cv2.imwrite(os.path.join(tmpdir, img_name), cv2.cvtColor(result.processed_image, cv2.COLOR_RGB2BGR))
-
-
-@pytest.mark.parametrize('img_name', CONFIG.IMAGES + CONFIG.IMAGES_NO_FACES)
-def test_no_detection_merging_pipeline(datadir, img_name, tmpdir):
-    im_path = Path(datadir) / CONFIG.IM_FOLDER / img_name
-
-    read_node = ReadOpenCVImage()
-    resizer_node = Resize2Dividable(must_divided=MUST_DIVIDED)
-    model_path = Path(datadir) / CONFIG.ONNX_MODEL_PATH
-    inference_engine = ONNXImageInference(model_path)
-    image_stylization_node = ImageGANStylization(inference_engine)
-    crops_stylization_node = BBoxGANStylization(inference_engine)
-    merging_node = SeamlessMergingCrops(TARGET_SHAPE, debug=True)
-    compose_node = Compose([read_node, resizer_node, image_stylization_node, crops_stylization_node, merging_node])
-
-    data = get_data(im_path)
-    result: ImagePipelineData = compose_node(data)
-    assert not merging_node.filter(data)
-    tmpdir = str(tmpdir)
-    result_image = result.processed_image
-    print(result_image.shape)
-    h, w, c = result_image.shape
-    assert h % MUST_DIVIDED == 0
-    assert w % MUST_DIVIDED == 0
-    assert c == 3
-
-    cv2.imwrite(os.path.join(tmpdir, img_name), cv2.cvtColor(result.processed_image, cv2.COLOR_RGB2BGR))
-
-
