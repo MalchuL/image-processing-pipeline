@@ -1,6 +1,12 @@
+import logging
+
 import numpy as np
 import torch
 
+try:
+    import onnxruntime
+except ImportError:
+    logging.error('torch cannot be loaded. did you try use `pip install torch`. TorchScriptModel cannot be used')
 
 class TorchScriptModel:
     def __init__(self, torchscrtpt_path, use_cuda=False):

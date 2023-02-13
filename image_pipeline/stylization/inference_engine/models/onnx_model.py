@@ -1,5 +1,11 @@
+import logging
+
 import numpy as np
-import onnxruntime
+
+try:
+    import onnxruntime
+except ImportError:
+    logging.error('onnxruntime cannot be loaded. did you try use `pip install onnxruntime`. ONNXModel cannot be used')
 
 
 class ONNXModel:
