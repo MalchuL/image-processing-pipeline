@@ -1,5 +1,7 @@
 import logging
+from typing import List
 
+import cv2
 import numpy as np
 
 from .dlib_detector import StatDlibFaceDetector
@@ -43,3 +45,39 @@ class StatMediaPipeDetector(StatDlibFaceDetector):
         if len(crops) > 0:
             crops = np.stack(crops, axis=0)
         return crops
+
+
+class ScaledStatMediaPipeDetector(StatMediaPipeDetector):
+    def __init__(self, target_size, must_divide=32, scale_bbox=1.0):
+        super().__init__(target_size, must_divide)
+        self.scale_bbox = scale_bbox
+
+    def _crop_faces(self, img, crops) -> (List[np.ndarray], np.ndarray):
+        cropped_faces = []
+        H, W, _ = img.shape
+        new_crops = []
+
+        for crop in crops:
+            x1, y1, x2, y2 = crop
+            center = ((x1 + x2) / 2, (y1 + y2) / 2)
+            wh = ((x2 - x1), (y2 - y1))
+            new_wh = (wh[0] * self.scale_bbox, wh[1] * self.scale_bbox)
+
+            x1 = max(min(round(center[0] - new_wh[0] / 2), W), 0)
+            y1 = max(min(round(center[1] - new_wh[1] / 2), H), 0)
+            x2 = max(min(round(center[0] + new_wh[0] / 2), W), 0)
+            y2 = max(min(round(center[1] + new_wh[1] / 2), H), 0)
+
+            new_wh = ((x2 - x1), (y2 - y1))
+            face_crop = img[y1:y2, x1:x2, :]
+
+            face_crop = cv2.resize(face_crop,
+                                   ((round(self.target_size * new_wh[0] / wh[0]) + self.must_divide - 1) // self.must_divide * self.must_divide,
+                                    (round(self.target_size * new_wh[1] / wh[1]) + self.must_divide - 1)// self.must_divide * self.must_divide),
+                                   interpolation=cv2.INTER_LINEAR)
+            cropped_faces.append(face_crop)
+            new_crops.append([x1, y1, x2, y2])
+        return cropped_faces, new_crops
+
+    def _unify_and_merge(self, cropped_images, crops):
+        return cropped_images, crops

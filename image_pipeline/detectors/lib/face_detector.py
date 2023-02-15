@@ -47,16 +47,16 @@ class FaceDetector(ABC):
         final_crops = np.array(final_crops, dtype=np.int32)
         return final_crops
 
-    def _crop_faces(self, img, crops) -> List[np.ndarray]:
+    def _crop_faces(self, img, crops) -> (List[np.ndarray], np.ndarray):
         cropped_faces = []
         for crop in crops:
             x1, y1, x2, y2 = crop
             face_crop = img[y1:y2, x1:x2, :]
             cropped_faces.append(face_crop)
-        return cropped_faces
+        return cropped_faces, crops
 
-    def _unify_and_merge(self, cropped_images):
-        return cropped_images
+    def _unify_and_merge(self, cropped_images, crops):
+        return cropped_images, crops
 
     def __call__(self, img):
         return self.detect_faces(img)
@@ -68,7 +68,7 @@ class FaceDetector(ABC):
         crops = self._sort_faces(crops)
         updated_crops = self._postprocess_crops(crops)
         updated_crops = self._fix_range_crops(img, updated_crops)
-        cropped_faces = self._crop_faces(img, updated_crops)
-        unified_faces = self._unify_and_merge(cropped_faces)
+        cropped_faces, updated_crops = self._crop_faces(img, updated_crops)
+        unified_faces, updated_crops = self._unify_and_merge(cropped_faces, updated_crops)
         return unified_faces, updated_crops
 

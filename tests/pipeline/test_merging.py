@@ -7,7 +7,8 @@ import pytest
 
 from image_pipeline.compose import Compose
 from image_pipeline.detectors.face_cropping import FaceCropping
-from image_pipeline.detectors.lib.mediapipe_detector import StatMediaPipeDetector
+from image_pipeline.detectors.lib.mediapipe_detector import StatMediaPipeDetector, ScaledStatMediaPipeDetector
+from image_pipeline.postprocess.merging_crops.larged_bbox import LargerBBox
 from image_pipeline.postprocess.merging_crops.seamless_merging_crops import SeamlessMergingCrops
 from image_pipeline.preprocess.resize2division import Resize2Dividable
 from image_pipeline.processed_data import ImagePipelineData
@@ -83,3 +84,29 @@ def test_no_detection_merging_pipeline(datadir, img_name, tmpdir):
     cv2.imwrite(os.path.join(tmpdir, img_name), cv2.cvtColor(result.processed_image, cv2.COLOR_RGB2BGR))
 
 
+@pytest.mark.parametrize('img_name', CONFIG.IMAGES)
+def test_larger_bbox_pipeline(datadir, img_name, tmpdir):
+    im_path = Path(datadir) / CONFIG.IM_FOLDER / img_name
+
+    read_node = ReadOpenCVImage()
+    resizer_node = Resize2Dividable(must_divided=MUST_DIVIDED)
+    detector = ScaledStatMediaPipeDetector(TARGET_SHAPE, scale_bbox=1.1)
+    cropping_node = FaceCropping(detector)
+    larger_bbox = LargerBBox()
+    model_path = Path(datadir) / CONFIG.ONNX_MODEL_PATH
+    inference_engine = get_onnx_inference(model_path)
+    image_stylization_node = ImageGANStylization(inference_engine)
+    compose_node = Compose([read_node, resizer_node, cropping_node, larger_bbox, image_stylization_node])
+
+    data = get_data(im_path)
+    result: ImagePipelineData = compose_node(data)
+
+    tmpdir = str(tmpdir)
+    result_image = result.processed_image
+    print(result_image.shape)
+    h, w, c = result_image.shape
+    assert h % MUST_DIVIDED == 0
+    assert w % MUST_DIVIDED == 0
+    assert c == 3
+
+    cv2.imwrite(os.path.join(tmpdir, img_name), cv2.cvtColor(result.processed_image, cv2.COLOR_RGB2BGR))

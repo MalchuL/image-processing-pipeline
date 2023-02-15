@@ -55,9 +55,9 @@ class StatDlibFaceDetector(FaceDetector):
             crops = np.stack(crops, axis=0)
         return crops
 
-    def _unify_and_merge(self, cropped_images):
+    def _unify_and_merge(self, cropped_images, crops):
         if self.target_size is None:
-            return cropped_images
+            return cropped_images, crops
         else:
             resized_images = []
             for cropped_image in cropped_images:
@@ -66,4 +66,4 @@ class StatDlibFaceDetector(FaceDetector):
                 resized_images.append(resized_image)
 
             resized_images = np.stack(resized_images, axis=0)
-            return resized_images
+            return resized_images, crops

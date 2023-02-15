@@ -4,4 +4,4 @@ IM_FOLDER = 'input_images'
 CONFIGS_FOLDER = 'configs'
 
 ONNX_MODEL_PATH = 'models/198_jjba_8_k_2_099_ep.onnx'
-TORCHSCRIPT_MODEL_PATH = 'models/jjba_258_ep_101.pt'
+TORCHSCRIPT_MODEL_PATH = 'models/arcane_exp_249_ep_139.pt'
