@@ -13,7 +13,7 @@ class FaceDetector(ABC):
         pass
 
     @abstractmethod
-    def _get_detection_outputs(self, img):
+    def _get_detection_outputs(self, img, **kwargs):
         pass
 
     @abstractmethod
@@ -28,12 +28,12 @@ class FaceDetector(ABC):
     def _postprocess_crops(self, crops, *args, **kwargs) -> List[np.ndarray]:
         return crops
 
-    def _sort_faces(self, crops):
+    def _sort_faces(self, crops, **kwargs):
         sorted_faces = sorted(crops, key=lambda x: -(x[2] - x[0]) * (x[3] - x[1]))
         sorted_faces = np.stack(sorted_faces, axis=0)
         return sorted_faces
 
-    def _fix_range_crops(self, img, crops):
+    def _fix_range_crops(self, img, crops, **kwargs):
         H, W, _ = img.shape
         final_crops = []
         for crop in crops:
@@ -47,7 +47,7 @@ class FaceDetector(ABC):
         final_crops = np.array(final_crops, dtype=np.int32)
         return final_crops
 
-    def _crop_faces(self, img, crops) -> (List[np.ndarray], np.ndarray):
+    def _crop_faces(self, img, crops, **kwargs) -> (List[np.ndarray], np.ndarray):
         cropped_faces = []
         for crop in crops:
             x1, y1, x2, y2 = crop
@@ -55,20 +55,20 @@ class FaceDetector(ABC):
             cropped_faces.append(face_crop)
         return cropped_faces, crops
 
-    def _unify_and_merge(self, cropped_images, crops):
+    def _unify_and_merge(self, cropped_images, crops, **kwargs):
         return cropped_images, crops
 
-    def __call__(self, img):
-        return self.detect_faces(img)
+    def __call__(self, img, **kwargs):
+        return self.detect_faces(img, **kwargs)
 
-    def detect_faces(self, img):
+    def detect_faces(self, img, **kwargs):
         crops = self._detect_crops(img)
         if crops is None or len(crops) == 0:
             return [], []
-        crops = self._sort_faces(crops)
-        updated_crops = self._postprocess_crops(crops)
-        updated_crops = self._fix_range_crops(img, updated_crops)
-        cropped_faces, updated_crops = self._crop_faces(img, updated_crops)
-        unified_faces, updated_crops = self._unify_and_merge(cropped_faces, updated_crops)
+        crops = self._sort_faces(crops, **kwargs)
+        updated_crops = self._postprocess_crops(crops, **kwargs)
+        updated_crops = self._fix_range_crops(img, updated_crops, **kwargs)
+        cropped_faces, updated_crops = self._crop_faces(img, updated_crops, **kwargs)
+        unified_faces, updated_crops = self._unify_and_merge(cropped_faces, updated_crops, **kwargs)
         return unified_faces, updated_crops
 

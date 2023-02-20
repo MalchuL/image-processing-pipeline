@@ -22,7 +22,7 @@ class StatMediaPipeDetector(StatDlibFaceDetector):
         detector = None
         return detector
 
-    def _get_detection_outputs(self, img):
+    def _get_detection_outputs(self, img, **kwargs):
         mp_face_detection = mp.solutions.face_detection
         with mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.5) as face_detector:
             outputs = face_detector.process(img)
@@ -52,16 +52,16 @@ class ScaledStatMediaPipeDetector(StatMediaPipeDetector):
         super().__init__(target_size, must_divide)
         self.scale_bbox = scale_bbox
 
-    def _crop_faces(self, img, crops) -> (List[np.ndarray], np.ndarray):
+    def _crop_faces(self, img, crops, **kwargs) -> (List[np.ndarray], np.ndarray):
         cropped_faces = []
         H, W, _ = img.shape
         new_crops = []
-
+        scale_bbox = kwargs.get('scale_bbox', self.scale_bbox)
         for crop in crops:
             x1, y1, x2, y2 = crop
             center = ((x1 + x2) / 2, (y1 + y2) / 2)
             wh = ((x2 - x1), (y2 - y1))
-            new_wh = (wh[0] * self.scale_bbox, wh[1] * self.scale_bbox)
+            new_wh = (wh[0] * scale_bbox, wh[1] * scale_bbox)
 
             x1 = max(min(round(center[0] - new_wh[0] / 2), W), 0)
             y1 = max(min(round(center[1] - new_wh[1] / 2), H), 0)
@@ -79,23 +79,24 @@ class ScaledStatMediaPipeDetector(StatMediaPipeDetector):
             new_crops.append([x1, y1, x2, y2])
         return cropped_faces, new_crops
 
-    def _unify_and_merge(self, cropped_images, crops):
+    def _unify_and_merge(self, cropped_images, crops, **kwargs):
         return cropped_images, crops
 
 
 class AllScaledStatMediaPipeDetector(ScaledStatMediaPipeDetector):
 
-    def _unify_and_merge(self, cropped_images, crops):
+    def _unify_and_merge(self, cropped_images, crops, **kwargs):
         if self.target_size is None:
             return cropped_images, crops
         else:
+            scale_bbox = kwargs.get('scale_bbox', self.scale_bbox)
             resized_images = []
             for cropped_image in cropped_images:
                 resized_image = cv2.resize(cropped_image,
                                            ((round(
-                                               self.target_size * self.scale_bbox) + self.must_divide - 1) // self.must_divide * self.must_divide,
+                                               self.target_size * scale_bbox) + self.must_divide - 1) // self.must_divide * self.must_divide,
                                             (round(
-                                                self.target_size * self.scale_bbox) + self.must_divide - 1) // self.must_divide * self.must_divide),
+                                                self.target_size * scale_bbox) + self.must_divide - 1) // self.must_divide * self.must_divide),
                                            interpolation=cv2.INTER_LINEAR)
                 resized_images.append(resized_image)
 

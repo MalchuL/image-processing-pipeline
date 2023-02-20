@@ -22,7 +22,7 @@ class StatDlibFaceDetector(FaceDetector):
     def _get_detector(self):
         return dlib.get_frontal_face_detector()
 
-    def _get_detection_outputs(self, img):
+    def _get_detection_outputs(self, img, **kwargs):
         return self.detector(img, 1)
 
     def _postprocess_crops(self, crops, *args, **kwargs) -> np.ndarray:
@@ -55,7 +55,7 @@ class StatDlibFaceDetector(FaceDetector):
             crops = np.stack(crops, axis=0)
         return crops
 
-    def _unify_and_merge(self, cropped_images, crops):
+    def _unify_and_merge(self, cropped_images, crops, **kwargs):
         if self.target_size is None:
             return cropped_images, crops
         else:

@@ -14,7 +14,14 @@ class FaceCropping(Pipeline):
 
     def process(self, data: ImagePipelineData):
         img = data.processed_image
-        images, crops = self.detector(img)
+        if data.additional_kwargs is None:
+            kwargs = {}
+        else:
+            if data.additional_kwargs.detection is not None:
+                kwargs = data.additional_kwargs.detection
+            else:
+                kwargs = {}
+        images, crops = self.detector(img, **kwargs)
         crops = [DetectionResult(crop, image) for image, crop in zip(images, crops)]
         data.detection_bboxes = crops
         data.processed_detection_bboxes = crops.copy()
