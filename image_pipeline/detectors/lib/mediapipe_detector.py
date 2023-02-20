@@ -81,3 +81,23 @@ class ScaledStatMediaPipeDetector(StatMediaPipeDetector):
 
     def _unify_and_merge(self, cropped_images, crops):
         return cropped_images, crops
+
+
+class AllScaledStatMediaPipeDetector(ScaledStatMediaPipeDetector):
+
+    def _unify_and_merge(self, cropped_images, crops):
+        if self.target_size is None:
+            return cropped_images, crops
+        else:
+            resized_images = []
+            for cropped_image in cropped_images:
+                resized_image = cv2.resize(cropped_image,
+                                           ((round(
+                                               self.target_size * self.scale_bbox) + self.must_divide - 1) // self.must_divide * self.must_divide,
+                                            (round(
+                                                self.target_size * self.scale_bbox) + self.must_divide - 1) // self.must_divide * self.must_divide),
+                                           interpolation=cv2.INTER_LINEAR)
+                resized_images.append(resized_image)
+
+            resized_images = np.stack(resized_images, axis=0)
+            return resized_images, crops
