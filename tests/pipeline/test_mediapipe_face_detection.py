@@ -104,3 +104,36 @@ def test_larger_bbox_multi_pipeline(datadir, img_name, tmpdir, scale_bbox):
     assert c == 3
 
     cv2.imwrite(os.path.join(tmpdir, img_name), cv2.cvtColor(result.processed_image, cv2.COLOR_RGB2BGR))
+
+
+@pytest.mark.parametrize('img_name', CONFIG.IMAGES)
+@pytest.mark.parametrize('scale_bbox', [1.0, 2.0])
+def test_larger_bbox_multi_pipeline(datadir, img_name, tmpdir, scale_bbox):
+    im_path = Path(datadir) / CONFIG.IM_FOLDER / img_name
+
+    read_node = ReadOpenCVImage()
+    resizer_node = Resize2Dividable(must_divided=MUST_DIVIDED)
+    detector = StatMediaPipeDetector(TARGET_SHAPE)
+    cropping_node = FaceCropping(detector)
+    model_path = Path(datadir) / CONFIG.ONNX_MODEL_PATH
+    inference_engine = get_onnx_inference(model_path)
+    image_stylization_node = ImageGANStylization(inference_engine)
+    crops_stylization_node = BBoxGANStylization(inference_engine)
+
+    merging_node = SeamlessMergingCrops(TARGET_SHAPE, debug=True)
+    compose_node = Compose(
+        [read_node, resizer_node, cropping_node, image_stylization_node, crops_stylization_node, merging_node])
+
+    data = get_data(im_path)
+    data.additional_kwargs.detection['scale_bbox'] = scale_bbox
+    result: ImagePipelineData = compose_node(data)
+
+    tmpdir = str(tmpdir)
+    result_image = result.processed_image
+    print(result_image.shape)
+    h, w, c = result_image.shape
+    assert h % MUST_DIVIDED == 0
+    assert w % MUST_DIVIDED == 0
+    assert c == 3
+
+    cv2.imwrite(os.path.join(tmpdir, img_name), cv2.cvtColor(result.processed_image, cv2.COLOR_RGB2BGR))
