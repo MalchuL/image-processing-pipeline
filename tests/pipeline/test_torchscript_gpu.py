@@ -21,11 +21,12 @@ from image_pipeline.utils.pipeline_data import get_data
 from tests.pipeline import CONFIG
 
 MUST_DIVIDED = 32
-TARGET_SHAPE = 256
+TARGET_SHAPE = 512
 
 @pytest.mark.parametrize('img_name', CONFIG.IMAGES + CONFIG.IMAGES_NO_FACES)
 @pytest.mark.parametrize('use_gpu', [False, True])
-def test_torchscript_pipeline(datadir, img_name, tmpdir, use_gpu):
+@pytest.mark.parametrize('chunk_size', [1, 2, 4, 12])
+def test_torchscript_pipeline(datadir, img_name, tmpdir, use_gpu, chunk_size):
     im_path = Path(datadir) / CONFIG.IM_FOLDER / img_name
 
     read_node = ReadOpenCVImage()
@@ -33,9 +34,9 @@ def test_torchscript_pipeline(datadir, img_name, tmpdir, use_gpu):
     detector = StatMediaPipeDetector(TARGET_SHAPE)
     cropping_node = FaceCropping(detector)
     model_path = Path(datadir) / CONFIG.TORCHSCRIPT_MODEL_PATH
-    inference_engine1 = get_torchscript_inference(model_path, use_gpu)
+    inference_engine1 = get_torchscript_inference(model_path, use_gpu, chunk_size=chunk_size)
     image_stylization_node = ImageGANStylization(inference_engine1)
-    inference_engine2 = get_torchscript_inference(model_path, use_gpu)
+    inference_engine2 = get_torchscript_inference(model_path, use_gpu, chunk_size=chunk_size)
     crops_stylization_node = BBoxGANStylization(inference_engine2)
     assert inference_engine1 is inference_engine2
     merging_node = SeamlessMergingCrops(TARGET_SHAPE, debug=True)
@@ -55,4 +56,4 @@ def test_torchscript_pipeline(datadir, img_name, tmpdir, use_gpu):
     assert w % MUST_DIVIDED == 0
     assert c == 3
 
-    cv2.imwrite(os.path.join(tmpdir, img_name), cv2.cvtColor(result.processed_image, cv2.COLOR_RGB2BGR))
+    cv2.imwrite(os.path.join(tmpdir, img_name + f'gpu_{use_gpu}_chunks_{chunk_size}.png'), cv2.cvtColor(result.processed_image, cv2.COLOR_RGB2BGR))
