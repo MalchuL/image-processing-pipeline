@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import Union, Iterable, List, Dict, Optional
+from dataclasses import dataclass, field
+from typing import Union, List, Dict, Optional
 
 import numpy as np
 
@@ -11,7 +11,9 @@ class DetectionResult:
 
 @dataclass
 class AdditionalArgs:
-    detection: Optional[Dict] = None
+    detection: Optional[Dict] = field(default_factory=dict)  # Possible keys: `scale_bbox` for mediapipe_detector
+    img_padding: Optional[Dict] = field(default_factory=dict)  # Possible keys: `skip_padding` for mediapipe_detector
+    output_cropping: Optional[List[int]] = None  # List of ints to crop [top, left, bottom, right]
 
 @dataclass
 class ImagePipelineData:
@@ -23,4 +25,4 @@ class ImagePipelineData:
     processed_image: np.ndarray = None
     output_path: Optional[str] = None
 
-    additional_kwargs: Optional[AdditionalArgs] = AdditionalArgs({})
+    additional_kwargs: Optional[AdditionalArgs] = field(default_factory=AdditionalArgs)
