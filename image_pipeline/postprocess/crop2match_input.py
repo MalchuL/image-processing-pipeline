@@ -13,7 +13,6 @@ class Crop2MatchInput(Pipeline):
         return img[top:h - bottom, left:w - right, :]
 
     def process(self, data: ImagePipelineData):
-        print(data.additional_kwargs.output_cropping)
         result_image = data.processed_image
         t, l, b, r = data.additional_kwargs.output_cropping
         result_image = self._crop_image_by_offsets(img=result_image, top=t, left=l, bottom=b, right=r)
